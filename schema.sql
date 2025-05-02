@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS books;
 
-CREATE TABLE users (
+CREATE TABLE books (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reader_name TEXT NOT NULL,
     title TEXT NOT NULL,
     author TEXT NOT NULL
 );
 
-INSERT INTO users (name, email) VALUES ('Spinning Silver', 'Naomi Novik');
-INSERT INTO users (name, email) VALUES ('Hippos Go Berserk', 'Sandra Boynton');
+INSERT INTO books (reader_name, title, author) VALUES ('Dani','Spinning Silver', 'Naomi Novik');
+INSERT INTO books (reader_name, title, author) VALUES ('Yonah','Hippos Go Berserk', 'Sandra Boynton');

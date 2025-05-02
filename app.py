@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template, request, redirect, g
 import sqlite3
 
 app = Flask(__name__)
@@ -21,11 +21,22 @@ def close_connection(exception):
 def index():
     return render_template('index.html')
 
+@app.route('/add_book', methods=['POST'])
+def add_book():
+    reader_name = request.form['Reader Name']
+    title = request.form['Title']
+    author = request.form['Author']
+    db = get_db()
+    db.execute('INSERT INTO books (reader_id, title, author) VALUES (?, ?)', (reader_name,title, author))
+    db.commit()
+    return redirect('/users')
+
+
 @app.route('/books')
 def books():
     db = get_db()
-    cur = db.execute('SELECT id, title, author FROM books')
-    users = cur.fetchall()
+    cur = db.execute('SELECT reader_name, title, author FROM books')
+    books = cur.fetchall()
     return render_template('books.html', books=books)
 
 if __name__ == '__main__':

@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, redirect, g
-import sqlite3
+import os
+import psycopg2
 
 app = Flask(__name__)
 DATABASE = 'database.db'
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
-    return db
+def get_db_connection():
+    conn = psycopg2.connect(host=os.environ('db_host'),
+                            database="postgres",
+                            user=os.environ('db_host'),
+                            password=os.environ.get('db_host'))
+    return conn
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -19,25 +20,33 @@ def close_connection(exception):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = get_db_connection()
+    curr = conn.cursor()
+    curr.execute('SELECT * FROM book_app.books;')
+    books = curr.fetchall()
+    curr.close()
+    conn.close()
+    return render_template('index.html',books=books)
 
-@app.route('/add_book', methods=['POST'])
+@app.route('/add_book')
 def add_book():
-    reader_name = request.form['Reader Name']
-    title = request.form['Title']
-    author = request.form['Author']
-    db = get_db()
-    db.execute('INSERT INTO books (reader_id, title, author) VALUES (?, ?)', (reader_name,title, author))
-    db.commit()
-    return redirect('/users')
+    title =  "What are you reading today?"
+    return render_template("add_book.html", title=title)
+    # reader_name = request.form['Reader Name']
+    # title = request.form['Title']
+    # author = request.form['Author']
+    # db = get_db()
+    # db.execute('INSERT INTO books (reader_id, title, author) VALUES (?, ?)', (reader_name,title, author))
+    # db.commit()
+    # return redirect('/users')
 
 
-@app.route('/books')
-def books():
-    db = get_db()
-    cur = db.execute('SELECT reader_name, title, author FROM books')
-    books = cur.fetchall()
-    return render_template('books.html', books=books)
+# @app.route('/books')
+# def books():
+#     db = get_db()
+#     cur = db.execute('SELECT reader_name, title, author FROM books')
+#     books = cur.fetchall()
+#     return render_template('books.html', books=books)
 
 if __name__ == '__main__':
     app.run(debug=True)

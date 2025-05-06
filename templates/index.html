@@ -1,8 +1,10 @@
-<!doctype html>
-<html>
-  <head><title>Home</title></head>
-  <body>
-    <h1>Welcome to the Web App</h1>
-    <a href="/books">View Books</a>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Books {% endblock %}</h1>
+    {% for book in books %}
+        <div class='book'>
+            <h3>#{{ book[0] }}</h3>
+        </div>
+    {% endfor %}
+{% endblock %}

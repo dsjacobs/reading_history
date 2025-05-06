@@ -11,8 +11,8 @@ DATABASE = 'database.db'
 def get_db_connection():
     conn = psycopg2.connect(host=os.environ['db_host'],
                             database="postgres",
-                            user=os.environ['user'],
-                            password=os.environ['password'])
+                            user=os.environ['db_user'],
+                            password=os.environ['db_password'])
     return conn
 
 @app.teardown_appcontext

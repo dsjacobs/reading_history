@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} {% endblock %}- What are you reading?</title>
+    <title>{% block title %} What are you reading? {% endblock %}</title>
     <style>
         nav a {
             color: #107a61;
@@ -26,8 +26,10 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('index') }}">FlaskApp</a>
-        <a href="#">About</a>
+        <a href="{{ url_for('index') }}">1000 Books Before Kindergarten</a>
+        <a href="add_book.html">Add a Book</a>
+        <a href="books.html">Reading History</a>
+
     </nav>
     <hr>
     <div class="content">

@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 DATABASE = 'database.db'
 
 def get_db_connection():
@@ -33,8 +34,13 @@ def index():
 
 @app.route('/add_book')
 def add_book():
-    title =  "What are you reading today?"
-    return render_template("add_book.html", title=title)
+    return render_template("add_book.html")
+    
+@app.route('/add_book',methods=['POST', 'GET'])
+def add_book():
+    if request.method == 'POST':
+        result = request.form
+        return render_template("result.html", result=result)
     # reader_name = request.form['Reader Name']
     # title = request.form['Title']
     # author = request.form['Author']
@@ -43,6 +49,24 @@ def add_book():
     # db.commit()
     # return redirect('/users')
 
+@app.route('/books')
+def books():
+    return render_template("books.html")
+
+@app.route('/setcookie', methods = ['POST', 'GET']) 
+def setcookie(): 
+    if request.method == 'POST': 
+        user = request.form['nm'] 
+        resp = make_response(render_template('cookie.html')) 
+        resp.set_cookie('userID', user) 
+        return resp 
+
+@app.route('/getcookie') 
+def getcookie(): 
+    name = request.cookies.get('userID') 
+    return '<h1>welcome '+name+'</h1>'
+if __name__ == "__main__":
+    app.run()
 
 # @app.route('/books')
 # def books():

@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>What are you reading?</title>
+    <script type = "text/javascript" src = "{{ url_for('static', filename = 'hello.js') }}" ></script>
     <style>
         nav a {
             color: #107a61;
@@ -37,5 +38,10 @@
     <div class="content">
         {% block content %} {% endblock %}
     </div>
+    <form action = "/setcookie" method = "POST"> 
+        <p><h3>Enter userID</h3></p> 
+        <p><input type = 'text' name = 'nm'/></p> 
+        <p><input type = 'submit' value = 'Login'/></p> 
+    </form> 
 </body>
 </html>

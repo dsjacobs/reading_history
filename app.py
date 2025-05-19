@@ -1,14 +1,21 @@
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+print("importing packages")
 from flask import Flask, render_template, request, redirect, g
 import os
 import psycopg2
 from dotenv import load_dotenv
 
+print("loading dotenv")
 load_dotenv()
 
+print("starting app")
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 DATABASE = 'database.db'
 
+print("db connection")
 def get_db_connection():
     conn = psycopg2.connect(host=os.environ['db_host'],
                             database="postgres",

@@ -23,12 +23,14 @@ def get_db_connection():
                             password=os.environ['db_password'])
     return conn
 
+print("define closed connection")
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
 
+print("fetch from db on homepage")
 @app.route('/')
 def index():
     conn = get_db_connection()
@@ -38,17 +40,20 @@ def index():
     curr.close()
     conn.close()
     return render_template('index.html',books=books)
-    
+
+print("add book")
 @app.route('/add_book',methods=['POST', 'GET'])
 def add_book():
     if request.method == 'POST':
         result = request.form
         return render_template("result.html", result=result)
 
+print("books page")
 @app.route('/books')
 def books():
     return render_template("books.html")
 
+print("set cookie")
 @app.route('/setcookie', methods = ['POST', 'GET']) 
 def setcookie(): 
     if request.method == 'POST': 
@@ -56,7 +61,8 @@ def setcookie():
         resp = make_response(render_template('cookie.html')) 
         resp.set_cookie('userID', user) 
         return resp 
-
+    
+print("get cookie")
 @app.route('/getcookie') 
 def getcookie(): 
     name = request.cookies.get('userID') 

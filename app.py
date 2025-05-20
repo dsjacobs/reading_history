@@ -41,12 +41,10 @@ def index():
     conn.close()
     return render_template('index.html',books=books)
 
-print("add book")
-@app.route('/add_book',methods=['POST', 'GET'])
-def add_book():
-    if request.method == 'POST':
-        result = request.form
-        return render_template("result.html", result=result)
+# print("add book")
+# def add_book():
+#     result = request.form
+#     return render_template("result.html", result=result)
 
 print("books page")
 @app.route('/books')

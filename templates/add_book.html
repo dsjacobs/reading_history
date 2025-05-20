@@ -1,14 +1,8 @@
 {% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
 
 {% block content %}
 <h1>What are you reading?</h1>
   <br><br><br>
-  <form action="/form" method="POST">
-      <label for="book_title">Title:</label><br>
-      <input type="text" id="book_title" name="book_title"><br>
-      <label for="author">Author:</label><br>
-      <input type="text" id="author" name="author"><br>
-      <label for="reaer">Reader:</label><br>
-      <input type="text" id="reader" name="reader">
-    </form>
+  {{ render_form(form) }}
 {% endblock %}

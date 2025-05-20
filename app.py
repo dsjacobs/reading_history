@@ -1,10 +1,16 @@
 import logging
+from logging import FileHandler,WARNING
 logging.basicConfig(level=logging.DEBUG)
 
 print("importing packages")
-from flask import Flask, render_template, request, redirect, g
+from flask import Flask, render_template, redirect, g, url_for
+from flask_bootstrap import Bootstrap5
 import os
 import psycopg2
+from flask_wtf import FlaskForm, CSRFProtect
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Length
+import secrets
 
 print("loading dotenv")
 from dotenv import load_dotenv
@@ -14,6 +20,15 @@ print("starting app")
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 DATABASE = 'database.db'
+file_handler = FileHandler('errorlog.txt')
+file_handler.setLevel(WARNING)
+
+print("form setup")
+foo = secrets.token_urlsafe(16)
+app.secret_key = foo
+bootstrap = Bootstrap5(app)
+# Flask-WTF requires this line
+csrf = CSRFProtect(app)
 
 print("db connection")
 def get_db_connection():
@@ -41,10 +56,21 @@ def index():
     conn.close()
     return render_template('index.html',books=books)
 
-# print("add book")
-# def add_book():
-#     result = request.form
-#     return render_template("result.html", result=result)
+class BookForm(FlaskForm):
+    title = StringField('Title?', validators=[DataRequired(), Length(10, 40)])
+    author= StringField('Author?', validators=[DataRequired(), Length(10, 40)])
+    reader = StringField('Reader?', validators=[DataRequired(), Length(10, 40)])
+    submit = SubmitField('Submit')
+
+print("add book")
+@app.route('/add_book')
+def add_book():
+    form = BookForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        author = form.author.data
+        reader = form.reader.data
+    return render_template('add_book.html', form=form)
 
 print("books page")
 @app.route('/books')

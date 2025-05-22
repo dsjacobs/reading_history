@@ -10,7 +10,6 @@ import psycopg2
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Length
-import secrets
 
 print("loading dotenv")
 from dotenv import load_dotenv
@@ -19,12 +18,13 @@ load_dotenv()
 print("starting app")
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.debug = True
 DATABASE = 'database.db'
 file_handler = FileHandler('errorlog.txt')
 file_handler.setLevel(WARNING)
 
 print("form setup")
-foo = secrets.token_urlsafe(16)
+foo = "\S_4VQB&'ZU]eGk>"
 app.secret_key = foo
 bootstrap = Bootstrap5(app)
 # Flask-WTF requires this line
@@ -62,7 +62,7 @@ class BookForm(FlaskForm):
     reader = StringField('Reader?', validators=[DataRequired(), Length(10, 40)])
     submit = SubmitField('Submit')
 
-print("add book")
+print("add book", methods=['GET', 'POST'])
 @app.route('/add_book')
 def add_book():
     form = BookForm()

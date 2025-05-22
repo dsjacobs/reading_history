@@ -3,7 +3,7 @@ from logging import FileHandler,WARNING
 logging.basicConfig(level=logging.DEBUG)
 
 print("importing packages")
-from flask import Flask, render_template, redirect, g, url_for
+from flask import Flask, render_template,request, redirect, g, url_for
 from flask_bootstrap import Bootstrap5
 import os
 import psycopg2
@@ -62,14 +62,15 @@ class BookForm(FlaskForm):
     reader = StringField('Reader?', validators=[DataRequired(), Length(10, 40)])
     submit = SubmitField('Submit')
 
-print("add book", methods=['GET', 'POST'])
+print("add book",methods = ['POST', 'GET'])
 @app.route('/add_book')
 def add_book():
     form = BookForm()
-    if form.validate_on_submit():
-        title = form.title.data
-        author = form.author.data
-        reader = form.reader.data
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            title = form.title.data
+            author = form.author.data
+            reader = form.reader.data
     return render_template('add_book.html', form=form)
 
 print("books page")
